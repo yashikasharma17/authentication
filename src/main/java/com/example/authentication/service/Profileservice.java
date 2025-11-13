@@ -4,7 +4,9 @@ import com.example.authentication.entity.Userentity;
 import com.example.authentication.io.Profileresponse;
 import com.example.authentication.io.Profilereuest;
 import com.example.authentication.repio.Userrep;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.UUID;
 
@@ -20,8 +22,11 @@ public class Profileservice implements Profileserviceimpl {
     @Override
     public Profileresponse createProfile(Profilereuest request) {
         Userentity newProfile = convertToEntity(request);
-        newProfile = ur.save(newProfile);
-        return convertToFileResponse(newProfile);
+        if(!ur.findByEmail(request.getEmail())){
+            newProfile = ur.save(newProfile);
+            return convertToFileResponse(newProfile);
+        }
+        throw new ResponseStatusException(HttpStatus.CONFLICT,"Email already exists ");
     }
 
     private Profileresponse convertToFileResponse(Userentity newProfile) {
