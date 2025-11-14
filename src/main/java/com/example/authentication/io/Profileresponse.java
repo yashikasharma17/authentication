@@ -3,6 +3,8 @@ package com.example.authentication.io;
 import lombok.*;
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 
 
 

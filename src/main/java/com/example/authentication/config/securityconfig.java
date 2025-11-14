@@ -13,7 +13,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
@@ -27,44 +26,58 @@ import java.util.List;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class securityconfig {
+
     @Autowired
     private Appuserdetails app;
-@Bean
+
+    @Bean
     public DefaultSecurityFilterChain securityWebFilterChain(HttpSecurity http ) throws Exception {
-    http.cors(Customizer.withDefaults())
-            .csrf(AbstractHttpConfigurer::disable)
-            .authorizeHttpRequests(auth->auth
-                    .requestMatchers("/login","/register","send-reset-otp","/reset-password")
-                    .permitAll().anyRequest().authenticated())
-            .sessionManagement(session-> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .logout(AbstractHttpConfigurer::disable);
 
-    return http.build();
-}
-@Bean
+        http.cors(Customizer.withDefaults())
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(
+                                "/api/v1.0/login",
+                                "/api/v1.0/register",
+                                "/api/v1.0/send-reset-otp",
+                                "/api/v1.0/reset-password"
+                        ).permitAll()
+                        .anyRequest().authenticated())
+                .sessionManagement(session ->
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .logout(AbstractHttpConfigurer::disable);
+
+        return http.build();
+    }
+
+    @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder(){
-    return new BCryptPasswordEncoder();
-}
-public CorsFilter corsFilter(){
-    return new CorsFilter(corsConfigurationSource());
-}
-public CorsConfigurationSource corsConfigurationSource() {
-    CorsConfiguration config = new CorsConfiguration();
-    config.setAllowedOrigins(List.of("http://localhost:5073"));
+        return new BCryptPasswordEncoder();
+    }
 
-    config.setAllowedMethods(List.of("GET", "PUT", "POST", "DELETE", "PATCH", "OPTIONS"));
-    config.addAllowedHeader(String.valueOf(List.of("Authorization", "Content-type")));
-    config.setAllowCredentials(true);
-    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    source.registerCorsConfiguration("/**", config);
-    return source;
-}
+    @Bean
+    public CorsFilter corsFilter(){
+        return new CorsFilter(corsConfigurationSource());
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedOrigins(List.of("http://localhost:5073"));
+        config.setAllowedMethods(List.of("GET", "PUT", "POST", "DELETE", "PATCH", "OPTIONS"));
+        config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        config.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
+    }
+
     @Bean
     public AuthenticationManager authenticationManager(){
-DaoAuthenticationProvider daoAuthenticationProvider1=new DaoAuthenticationProvider();
-daoAuthenticationProvider1.setUserDetailsService((UserDetailsService) app);
-daoAuthenticationProvider1.setPasswordEncoder(bCryptPasswordEncoder());
-return new ProviderManager(daoAuthenticationProvider1);
-
-}
+        DaoAuthenticationProvider dao = new DaoAuthenticationProvider();
+        dao.setUserDetailsService(app);
+        dao.setPasswordEncoder(bCryptPasswordEncoder());
+        return new ProviderManager(dao);
+    }
 }

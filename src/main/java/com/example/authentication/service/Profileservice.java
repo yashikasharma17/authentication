@@ -28,7 +28,7 @@ public class Profileservice implements Profileserviceimpl {
     @Override
     public Profileresponse createProfile(Profilereuest request) {
         Userentity newProfile = convertToEntity(request);
-        if(!ur.findByEmail(request.getEmail())){
+        if(!ur.findByEmail(request.getEmail()).isPresent()){
             newProfile = ur.save(newProfile);
             return convertToFileResponse(newProfile);
         }

@@ -1,6 +1,6 @@
 package com.example.authentication.controller;
 
-import Util.jwtutil;
+import com.example.authentication.util.jwtutil;
 import com.example.authentication.io.Authrequest;
 import com.example.authentication.io.Authresponse;
 import com.example.authentication.service.Appuserdetails;
@@ -15,7 +15,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,15 +26,15 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 public class AuthController{
-    @Autowired
-    private Authresponse Authresponse;
+
+
     @Autowired
     private AuthenticationManager authenticationManager;
     @Autowired
     private Appuserdetails appuserdetails;
     @Autowired
     private jwtutil jwt;
-    @PostMapping("/login")
+    @PostMapping("/api/v1.0/login")
     public ResponseEntity<?> login(@RequestBody Authrequest request){
         try{
             authenticate(request.getPassword(),request.getEmail());
