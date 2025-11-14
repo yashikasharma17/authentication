@@ -34,7 +34,7 @@ public class AuthController{
     private Appuserdetails appuserdetails;
     @Autowired
     private jwtutil jwt;
-    @PostMapping("/api/v1.0/login")
+    @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Authrequest request){
         try{
             authenticate(request.getPassword(),request.getEmail());

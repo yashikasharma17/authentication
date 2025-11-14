@@ -37,10 +37,10 @@ public class securityconfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/api/v1.0/login",
-                                "/api/v1.0/register",
-                                "/api/v1.0/send-reset-otp",
-                                "/api/v1.0/reset-password"
+                                "/login",
+                                "/register",
+                                "/send-reset-otp",
+                                "/reset-password"
                         ).permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session ->

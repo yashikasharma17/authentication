@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1.0")
+
 
 public class Profilecontroller{
     @Autowired
@@ -22,6 +22,10 @@ private  Profileservice ps;
     public Profileresponse register(@Valid @RequestBody Profilereuest request){
        Profileresponse response= ps.createProfile(request);
        return response;
+   }
+   @GetMapping("/")
+    public void  happy(){
+       System.out.println("hello everyone ");
    }
 
 }
