@@ -4,7 +4,9 @@ import com.example.authentication.entity.Userentity;
 import com.example.authentication.io.Profileresponse;
 import com.example.authentication.io.Profilereuest;
 import com.example.authentication.repio.Userrep;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -12,11 +14,15 @@ import java.util.UUID;
 
 @Service
 public class Profileservice implements Profileserviceimpl {
+    @Autowired
     private final Userrep ur;
+    @Autowired
+    private final PasswordEncoder pe;
 
     // manually created constructor
-    public Profileservice(Userrep ur) {
+    public Profileservice(Userrep ur, PasswordEncoder pe) {
         this.ur = ur;
+        this.pe = pe;
     }
 
     @Override
@@ -43,7 +49,7 @@ public class Profileservice implements Profileserviceimpl {
         entity.setEmail(request.getEmail());
         entity.setUserid(UUID.randomUUID().toString());
         entity.setName(request.getName());
-        entity.setPassword(request.getPassword());
+        entity.setPassword(pe.encode(request.getPassword()));
         entity.setAccountVerified(false);
         entity.setResetOtpExpireAt(String.valueOf(0L));
         entity.setVerifyOtp(null);
