@@ -1,10 +1,7 @@
 package com.example.authentication.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -16,7 +13,8 @@ import java.sql.Timestamp;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-
+@Getter
+@Setter
 public class Userentity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -83,12 +81,13 @@ public class Userentity {
     }
 
     public String isAccountVerified() {
-        return isAccountVerified();
+        return this.isAccountVerified;  // return field
     }
 
     public void setAccountVerified(boolean accountVerified) {
-        isAccountVerified = String.valueOf(accountVerified);
+        this.isAccountVerified = String.valueOf(accountVerified);  // set field
     }
+
 
     public String getVerifyOtpExpired() {
         return verifyOtpExpired;

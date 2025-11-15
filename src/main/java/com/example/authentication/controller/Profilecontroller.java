@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
@@ -26,6 +27,14 @@ private  Profileservice ps;
    @GetMapping("/")
     public void  happy(){
        System.out.println("hello everyone ");
+   }
+   @GetMapping("/test")
+    public String test(){
+       return "Auth is working";
+   }
+   @GetMapping("/profile")
+    public Profileresponse getprofile(@CurrentSecurityContext(expression = "authentication?.name") String email ){
+return ps.getfileresponse(email);
    }
 
 }

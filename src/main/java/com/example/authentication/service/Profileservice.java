@@ -6,6 +6,7 @@ import com.example.authentication.io.Profilereuest;
 import com.example.authentication.repio.Userrep;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -33,6 +34,14 @@ public class Profileservice implements Profileserviceimpl {
             return convertToFileResponse(newProfile);
         }
         throw new ResponseStatusException(HttpStatus.CONFLICT,"Email already exists ");
+    }
+
+    @Override
+    public Profileresponse getfileresponse(String email) {
+        Userentity user=ur.findByEmail(email)
+                .orElseThrow(()-> new UsernameNotFoundException("this email does not exist: "+email));
+        return convertToFileResponse(user);
+
     }
 
     private Profileresponse convertToFileResponse(Userentity newProfile) {

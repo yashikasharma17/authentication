@@ -1,12 +1,16 @@
 package com.example.authentication.config;
 
+import com.example.authentication.filter.jwtsRequestFilter;
 import com.example.authentication.service.Appuserdetails;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -15,6 +19,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.DefaultSecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -29,6 +34,12 @@ public class securityconfig {
 
     @Autowired
     private Appuserdetails app;
+    @Autowired
+    private  jwtsRequestFilter jwtsrequestFilter;
+@Autowired
+    private customauthentication ca;
+
+
 
     @Bean
     public DefaultSecurityFilterChain securityWebFilterChain(HttpSecurity http ) throws Exception {
@@ -41,11 +52,15 @@ public class securityconfig {
                                 "/register",
                                 "/send-reset-otp",
                                 "/reset-password"
+                                ,"/logout"
                         ).permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .logout(AbstractHttpConfigurer::disable);
+                .logout(AbstractHttpConfigurer::disable)
+                .exceptionHandling(ex->ex.authenticationEntryPoint(ca))
+                .addFilterBefore(jwtsrequestFilter, UsernamePasswordAuthenticationFilter.class);
+
 
         return http.build();
     }
@@ -80,4 +95,5 @@ public class securityconfig {
         dao.setPasswordEncoder(bCryptPasswordEncoder());
         return new ProviderManager(dao);
     }
+
 }
