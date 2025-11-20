@@ -40,7 +40,8 @@ public class jwtsRequestFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
        final String path=request.getServletPath();
-       if(PUBLIC_URLS.contains(path)){
+
+       if(PUBLIC_URLS.stream().anyMatch(path::startsWith)){
            filterChain.doFilter(request,response);
            return;
        }

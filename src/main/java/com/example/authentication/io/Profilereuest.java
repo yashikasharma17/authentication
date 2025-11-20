@@ -19,7 +19,7 @@ public class Profilereuest {
     @Email(message="enter valid email address")
     @NotNull(message="email should not be null")
     private String email;
-    @Min(value=6,message="Password should be at least 6 characters long")
+
     private String password;
 
     public String getName() {
