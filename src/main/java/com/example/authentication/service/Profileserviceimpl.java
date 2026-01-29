@@ -6,4 +6,5 @@ import com.example.authentication.io.Profileresponse;
 public interface Profileserviceimpl {
     Profileresponse createProfile(Profilereuest request);
     Profileresponse getfileresponse(String email);
+    void sendResendOTP(String email) ;
 }

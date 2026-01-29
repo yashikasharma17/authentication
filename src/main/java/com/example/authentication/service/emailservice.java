@@ -25,5 +25,13 @@ public class emailservice {
         message.setText("Hello "+name+"\n\n Thanks for registering with us ,\n\n Regards, \n Zukiyo Team");
         javaMailSender.send(message);
     }
+    public void sendResendOTP(String toemail,String otp){
+        SimpleMailMessage message=new SimpleMailMessage();
+        message.setFrom(emailfrom);
+        message.setTo(toemail);
+        message.setSubject("The otp ");
+        message.setText("Here is your"+otp+"to enter,\n\n Regards,\n Zukiyo Team");
+        javaMailSender.send(message);
+    }
 }
 

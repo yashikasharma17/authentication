@@ -53,6 +53,7 @@ public class securityconfig {
                                 "/send-reset-otp",
                                 "/reset-password"
                                 ,"/logout"
+,"/is_authenticated"
                         ).permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session ->

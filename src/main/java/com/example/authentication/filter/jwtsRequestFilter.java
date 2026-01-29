@@ -34,7 +34,7 @@ public class jwtsRequestFilter extends OncePerRequestFilter {
     private  jwtutil jwtu;
 
 
-    private final static List<String> PUBLIC_URLS=List.of("/login","/register","/send-resend-otp","/reset-pssword","/logout");
+    private final static List<String> PUBLIC_URLS=List.of("/login","/register","/send-resend-otp","/reset-password","/logout");
 
 
     @Override

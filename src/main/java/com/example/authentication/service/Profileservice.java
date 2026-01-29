@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 public class Profileservice implements Profileserviceimpl {
@@ -19,12 +20,16 @@ public class Profileservice implements Profileserviceimpl {
     private final Userrep ur;
     @Autowired
     private final PasswordEncoder pe;
+    @Autowired
+    private final emailservice es;
 
-    // manually created constructor
-    public Profileservice(Userrep ur, PasswordEncoder pe) {
+    public Profileservice(Userrep ur, PasswordEncoder pe, emailservice es) {
         this.ur = ur;
         this.pe = pe;
+        this.es = es;
     }
+
+    // manually created constructor
 
     @Override
     public Profileresponse createProfile(Profilereuest request) {
@@ -42,6 +47,22 @@ public class Profileservice implements Profileserviceimpl {
                 .orElseThrow(()-> new UsernameNotFoundException("this email does not exist: "+email));
         return convertToFileResponse(user);
 
+    }
+
+    @Override
+    public void sendResendOTP(String email) {
+        Userentity userentity=ur.findByEmail(email)
+                .orElseThrow(()->new UsernameNotFoundException("cant find the user with"+email));
+                String otp= String.valueOf(ThreadLocalRandom.current().nextInt(100000,1000000));
+                long expiryTime=System.currentTimeMillis()+(15*60*1000);
+                userentity.getResetOtp(otp);
+                userentity.getResetOtpExpireAt(expiryTime);
+                ur.save(userentity);
+                try{
+es.sendResendOTP(userentity.getEmail(), otp);
+                }catch(Exception e){
+                    throw new RuntimeException("Unable to send email");
+                }
     }
 
     private Profileresponse convertToFileResponse(Userentity newProfile) {

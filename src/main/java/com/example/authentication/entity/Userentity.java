@@ -97,7 +97,7 @@ public class Userentity {
         this.verifyOtpExpired = verifyOtpExpired;
     }
 
-    public String getResetOtp() {
+    public String getResetOtp(String otp) {
         return resetOtp;
     }
 
@@ -105,7 +105,7 @@ public class Userentity {
         this.resetOtp = resetOtp;
     }
 
-    public String getResetOtpExpireAt() {
+    public String getResetOtpExpireAt(long expiryTime) {
         return resetOtpExpireAt;
     }
 
