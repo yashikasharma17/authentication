@@ -55,14 +55,30 @@ public class Profileservice implements Profileserviceimpl {
                 .orElseThrow(()->new UsernameNotFoundException("cant find the user with"+email));
                 String otp= String.valueOf(ThreadLocalRandom.current().nextInt(100000,1000000));
                 long expiryTime=System.currentTimeMillis()+(15*60*1000);
-                userentity.getResetOtp(otp);
-                userentity.getResetOtpExpireAt(expiryTime);
+                userentity.setResetOtp(otp);
+                userentity.setResetOtpExpireAt(expiryTime);
                 ur.save(userentity);
                 try{
 es.sendResendOTP(userentity.getEmail(), otp);
                 }catch(Exception e){
                     throw new RuntimeException("Unable to send email");
                 }
+    }
+
+    @Override
+    public void resetPassword(String email, String otp, String password) {
+        Userentity userentity=ur.findByEmail(email)
+                .orElseThrow(()->new UsernameNotFoundException("cant find the user with"+email));
+        if(userentity.getResetOtp()==null || !userentity.getResetOtp().equals(otp)){
+            throw new RuntimeException("the otp does not match");
+        }
+        if(userentity.getResetOtpExpireAt() < System.currentTimeMillis()){
+            throw new RuntimeException("OTP expired");
+        }
+        userentity.setPassword(password);
+        userentity.setResetOtp(null);
+        userentity.setResetOtpExpireAt(0L);
+        ur.save(userentity);
     }
 
     private Profileresponse convertToFileResponse(Userentity newProfile) {
@@ -81,7 +97,7 @@ es.sendResendOTP(userentity.getEmail(), otp);
         entity.setName(request.getName());
         entity.setPassword(pe.encode(request.getPassword()));
         entity.setAccountVerified(false);
-        entity.setResetOtpExpireAt(String.valueOf(0L));
+        entity.setResetOtpExpireAt(0L);
         entity.setVerifyOtp(null);
         entity.setVerifyOtpExpired(String.valueOf(0L));
         entity.setResetOtp(null);

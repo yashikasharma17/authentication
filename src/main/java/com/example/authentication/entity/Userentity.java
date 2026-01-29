@@ -97,19 +97,22 @@ public class Userentity {
         this.verifyOtpExpired = verifyOtpExpired;
     }
 
-    public String getResetOtp(String otp) {
+    public String getResetOtp() {
+
         return resetOtp;
     }
 
     public void setResetOtp(String resetOtp) {
+
         this.resetOtp = resetOtp;
     }
 
-    public String getResetOtpExpireAt(long expiryTime) {
+    public long getResetOtpExpireAt() {
         return resetOtpExpireAt;
     }
 
-    public void setResetOtpExpireAt(String resetOtpExpireAt) {
+    public void setResetOtpExpireAt(long resetOtpExpireAt) {
+
         this.resetOtpExpireAt = resetOtpExpireAt;
     }
 
@@ -130,7 +133,7 @@ public class Userentity {
     }
 
     private String resetOtp;
-    private String resetOtpExpireAt;
+    private long resetOtpExpireAt;
 
     @CreationTimestamp
     @Column(updatable = false)

@@ -7,4 +7,5 @@ public interface Profileserviceimpl {
     Profileresponse createProfile(Profilereuest request);
     Profileresponse getfileresponse(String email);
     void sendResendOTP(String email) ;
+    void resetPassword(String email,String otp,String password);
 }
